@@ -65,28 +65,30 @@ export async function sendOrderEmail(data: any) {
       return
     }
 
+    console.log("Sending email with data:", data);
+
     // Create transporter
     const transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
+      host: "live.smtp.mailtrap.io",
+      port: 587,
       auth: {
-        user: process.env.MAILTRAP_TOKEN,
+        user: "smtp@mailtrap.io",
         pass: process.env.MAILTRAP_TOKEN,
       },
     })
 
     // Get template based on order status
-    const template = emailTemplates[data.status]
+    const template = emailTemplates[data.status] || emailTemplates.approved;
 
     // Send email
     const info = await transport.sendMail({
-      from: process.env.MAILTRAP_SENDER_EMAIL,
-      to: data.customer.email,
+      from: 'info@demomailtrap.co',
+      to: 'gchahat749@gmail.com',
       subject: template.subject,
       html: template.html(data),
     })
 
-    console.log("Email sent:", info.messageId)
+    console.log("Email sent to Chahat:", info.messageId)
     return info
   } catch (error) {
     console.error("Email sending error:", error)
